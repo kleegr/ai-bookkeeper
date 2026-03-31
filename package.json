@@ -1,1 +1,14 @@
-ewogICJuYW1lIjogImFpLWJvb2trZWVwZXIiLAogICJ2ZXJzaW9uIjogIjEuMC4wIiwKICAiZGVzY3JpcHRpb24iOiAiQUkgQm9va2tlZXBlciBTYWFTIGZvciBzbWFsbCBidXNpbmVzc2VzIgp9Cg==
+{
+  "name": "ai-bookkeeper",
+  "version": "1.0.0",
+  "description": "AI Bookkeeper SaaS for small businesses",
+  "scripts": {
+    "start": "node api/data.js"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  },
+  "engines": {
+    "node": "18.x"
+  }
+}
