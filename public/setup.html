@@ -80,6 +80,10 @@
     flex-shrink: 0;
   }
   
+  .step-number.completed {
+    background: #28a745;
+  }
+  
   .step-content {
     flex: 1;
   }
@@ -110,7 +114,7 @@
     font-size: 1rem;
   }
   
-  .btn:hover {
+  .btn:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
   }
@@ -121,7 +125,7 @@
     color: #667eea;
   }
   
-  .btn-outline:hover {
+  .btn-outline:hover:not(:disabled) {
     background: #667eea;
     color: white;
   }
@@ -131,6 +135,10 @@
     cursor: not-allowed;
     transform: none !important;
     box-shadow: none !important;
+  }
+  
+  .btn-success {
+    background: #28a745 !important;
   }
   
   .footer {
@@ -168,6 +176,27 @@
     margin-right: 0.5rem;
   }
   
+  .loading {
+    display: none;
+    align-items: center;
+    margin-left: 1rem;
+  }
+  
+  .spinner {
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #667eea;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+    margin-right: 0.5rem;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
   @media (max-width: 768px) {
     .step {
       flex-direction: column;
@@ -197,8 +226,8 @@
     </div>
     
     <div class="steps">
-      <div class="step">
-        <div class="step-number">1</div>
+      <div class="step" id="step1">
+        <div class="step-number" id="step1-number">1</div>
         <div class="step-content">
           <h3>Connect QuickBooks</h3>
           <p>Securely link your QuickBooks Online account to start syncing your financial data. We use bank-level encryption and never store your login credentials.</p>
@@ -209,12 +238,16 @@
             <div class="feature-item">Instant revocation</div>
           </div>
           <br>
-          <button class="btn" onclick="connectQuickBooks()">Connect QuickBooks</button>
+          <button class="btn" id="connect-btn" onclick="connectQuickBooks()">Connect QuickBooks</button>
+          <div class="loading" id="loading1">
+            <div class="spinner"></div>
+            <span>Connecting to QuickBooks...</span>
+          </div>
         </div>
       </div>
       
-      <div class="step">
-        <div class="step-number">2</div>
+      <div class="step" id="step2">
+        <div class="step-number" id="step2-number">2</div>
         <div class="step-content">
           <h3>Business Information</h3>
           <p>Tell us about your business so we can provide personalized insights and recommendations tailored to your industry.</p>
@@ -225,12 +258,16 @@
             <div class="feature-item">Tax preparation help</div>
           </div>
           <br>
-          <button class="btn btn-outline" disabled>Complete Step 1 First</button>
+          <button class="btn btn-outline" id="step2-btn" disabled onclick="setupBusinessInfo()">Complete Step 1 First</button>
+          <div class="loading" id="loading2">
+            <div class="spinner"></div>
+            <span>Setting up business profile...</span>
+          </div>
         </div>
       </div>
       
-      <div class="step">
-        <div class="step-number">3</div>
+      <div class="step" id="step3">
+        <div class="step-number" id="step3-number">3</div>
         <div class="step-content">
           <h3>AI Preferences</h3>
           <p>Configure how often you want reports, what metrics matter most, and how you prefer to receive insights from your AI bookkeeper.</p>
@@ -241,7 +278,11 @@
             <div class="feature-item">Communication style</div>
           </div>
           <br>
-          <button class="btn btn-outline" disabled>Complete Previous Steps</button>
+          <button class="btn btn-outline" id="step3-btn" disabled onclick="setupAIPreferences()">Complete Previous Steps</button>
+          <div class="loading" id="loading3">
+            <div class="spinner"></div>
+            <span>Configuring AI assistant...</span>
+          </div>
         </div>
       </div>
     </div>
@@ -253,43 +294,151 @@
   </div>
   
   <script>
-    function connectQuickBooks() {
-      // In a real implementation, this would redirect to QuickBooks OAuth
-      alert('🔗 QuickBooks integration coming soon!\n\nThis would normally redirect you to QuickBooks to authorize the connection.');
+    // Check QuickBooks connection status on page load
+    window.addEventListener('load', checkQBStatus);
+    
+    // Listen for messages from OAuth popup
+    window.addEventListener('message', function(event) {
+      if (event.data.type === 'qb-connected') {
+        handleQBConnected(event.data.realmId);
+      }
+    });
+    
+    async function checkQBStatus() {
+      try {
+        // Use a demo email for now - in production, this would come from user authentication
+        const email = 'demo@example.com';
+        const response = await fetch(`/api/qb-status?email=${encodeURIComponent(email)}`);
+        const status = await response.json();
+        
+        if (status.connected && !status.is_expired) {
+          handleQBConnected(status.realm_id);
+        }
+      } catch (error) {
+        console.log('Could not check QB status:', error.message);
+      }
+    }
+    
+    async function connectQuickBooks() {
+      const connectBtn = document.getElementById('connect-btn');
+      const loading = document.getElementById('loading1');
       
-      // Simulate successful connection for demo
-      setTimeout(() => {
-        document.querySelector('.step:nth-child(1) .btn').textContent = '✅ Connected';
-        document.querySelector('.step:nth-child(1) .btn').style.background = '#28a745';
+      try {
+        // Show loading state
+        connectBtn.style.display = 'none';
+        loading.style.display = 'flex';
         
-        // Enable step 2
-        const step2Btn = document.querySelector('.step:nth-child(2) .btn');
-        step2Btn.textContent = 'Enter Business Info';
-        step2Btn.disabled = false;
-        step2Btn.classList.remove('btn-outline');
+        // Get OAuth URL from backend
+        const response = await fetch('/api/auth/qb-connect?email=demo@example.com');
+        const data = await response.json();
         
-        step2Btn.onclick = () => {
-          alert('📋 Business setup form coming soon!');
-          step2Btn.textContent = '✅ Completed';
-          step2Btn.style.background = '#28a745';
-          
-          // Enable step 3
-          const step3Btn = document.querySelector('.step:nth-child(3) .btn');
-          step3Btn.textContent = 'Configure AI';
-          step3Btn.disabled = false;
-          step3Btn.classList.remove('btn-outline');
-          
-          step3Btn.onclick = () => {
-            alert('🤖 AI configuration panel coming soon!');
-            step3Btn.textContent = '✅ All Set!';
-            step3Btn.style.background = '#28a745';
-            
+        if (data.error) {
+          throw new Error(data.error);
+        }
+        
+        // Open QuickBooks OAuth in popup
+        const popup = window.open(
+          data.authUrl,
+          'qb-oauth',
+          'width=800,height=600,scrollbars=yes,resizable=yes'
+        );
+        
+        // Check if popup was blocked
+        if (!popup) {
+          throw new Error('Popup blocked. Please allow popups for this site.');
+        }
+        
+        // Monitor popup closure
+        const checkClosed = setInterval(() => {
+          if (popup.closed) {
+            clearInterval(checkClosed);
+            // Reset UI if user closed popup without completing OAuth
             setTimeout(() => {
-              alert('🎉 Setup Complete!\n\nYour AI Bookkeeper is ready to help you manage your finances.');
+              if (!document.getElementById('connect-btn').classList.contains('btn-success')) {
+                connectBtn.style.display = 'inline-block';
+                connectBtn.textContent = 'Connect QuickBooks';
+                loading.style.display = 'none';
+              }
             }, 1000);
-          };
-        };
+          }
+        }, 1000);
+        
+      } catch (error) {
+        alert('❌ Connection Error\n\n' + error.message);
+        connectBtn.style.display = 'inline-block';
+        loading.style.display = 'none';
+      }
+    }
+    
+    function handleQBConnected(realmId) {
+      const connectBtn = document.getElementById('connect-btn');
+      const loading = document.getElementById('loading1');
+      const step1Number = document.getElementById('step1-number');
+      const step2Btn = document.getElementById('step2-btn');
+      
+      // Update step 1 to completed state
+      connectBtn.textContent = '✅ Connected to QuickBooks';
+      connectBtn.classList.add('btn-success');
+      loading.style.display = 'none';
+      connectBtn.style.display = 'inline-block';
+      step1Number.classList.add('completed');
+      step1Number.textContent = '✓';
+      
+      // Enable step 2
+      step2Btn.textContent = 'Enter Business Info';
+      step2Btn.disabled = false;
+      step2Btn.classList.remove('btn-outline');
+    }
+    
+    function setupBusinessInfo() {
+      const step2Btn = document.getElementById('step2-btn');
+      const loading = document.getElementById('loading2');
+      const step2Number = document.getElementById('step2-number');
+      const step3Btn = document.getElementById('step3-btn');
+      
+      // Show loading
+      step2Btn.style.display = 'none';
+      loading.style.display = 'flex';
+      
+      // Simulate business setup (replace with real form later)
+      setTimeout(() => {
+        step2Btn.textContent = '✅ Business Info Complete';
+        step2Btn.classList.add('btn-success');
+        loading.style.display = 'none';
+        step2Btn.style.display = 'inline-block';
+        step2Number.classList.add('completed');
+        step2Number.textContent = '✓';
+        
+        // Enable step 3
+        step3Btn.textContent = 'Configure AI Assistant';
+        step3Btn.disabled = false;
+        step3Btn.classList.remove('btn-outline');
       }, 2000);
+    }
+    
+    function setupAIPreferences() {
+      const step3Btn = document.getElementById('step3-btn');
+      const loading = document.getElementById('loading3');
+      const step3Number = document.getElementById('step3-number');
+      
+      // Show loading
+      step3Btn.style.display = 'none';
+      loading.style.display = 'flex';
+      
+      // Simulate AI setup (replace with real preferences later)
+      setTimeout(() => {
+        step3Btn.textContent = '✅ Setup Complete!';
+        step3Btn.classList.add('btn-success');
+        loading.style.display = 'none';
+        step3Btn.style.display = 'inline-block';
+        step3Number.classList.add('completed');
+        step3Number.textContent = '✓';
+        
+        // Show success message
+        setTimeout(() => {
+          alert('🎉 Congratulations!\n\nYour AI Bookkeeper is now set up and ready to help you manage your finances.\n\nYou can now access your dashboard to see your QuickBooks data and AI insights.');
+        }, 500);
+      }, 2500);
     }
   </script>
 </body>
