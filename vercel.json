@@ -2,6 +2,7 @@
   "outputDirectory": "public",
   "rewrites": [
     { "source": "/setup", "destination": "/setup.html" },
+    { "source": "/api/auth/(.*)", "destination": "/api/auth/$1" },
     { "source": "/api/(.*)", "destination": "/api/$1" }
   ]
 }
