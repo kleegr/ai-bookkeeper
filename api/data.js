@@ -6,9 +6,9 @@ const https = require('https');
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY;
 
-// Set ALLOWED_ORIGIN in your Vercel environment variables
-// e.g. https://your-app.vercel.app
-const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || 'https://your-app.vercel.app';
+// ALLOWED_ORIGIN is set in Vercel environment variables
+// Default falls back to your production domain
+const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || 'https://ai-bookkeeper-red.vercel.app';
 
 async function getCustomer(email) {
   const res = await fetch(
