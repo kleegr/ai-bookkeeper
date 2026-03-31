@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Setup - BookkeeperAI</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+  
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  }
+  
+  .header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 2rem;
+    text-align: center;
+    color: white;
+  }
+  
+  .header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 300;
+  }
+  
+  .header p {
+    opacity: 0.9;
+    font-size: 1.1rem;
+  }
+  
+  .steps {
+    padding: 3rem;
+  }
+  
+  .step {
+    display: flex;
+    align-items: center;
+    margin-bottom: 3rem;
+    padding: 2rem;
+    border-radius: 15px;
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    transition: all 0.3s ease;
+  }
+  
+  .step:hover {
+    border-color: #667eea;
+    background: #f0f2ff;
+  }
+  
+  .step-number {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-right: 2rem;
+    flex-shrink: 0;
+  }
+  
+  .step-content {
+    flex: 1;
+  }
+  
+  .step-content h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+  }
+  
+  .step-content p {
+    color: #666;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+  }
+  
+  .btn {
+    display: inline-block;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-decoration: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+  }
+  
+  .btn-outline {
+    background: transparent;
+    border: 2px solid #667eea;
+    color: #667eea;
+  }
+  
+  .btn-outline:hover {
+    background: #667eea;
+    color: white;
+  }
+  
+  .footer {
+    text-align: center;
+    padding: 2rem;
+    background: #f8f9fa;
+    color: #666;
+  }
+  
+  .feature-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .feature-item {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #555;
+  }
+  
+  .feature-item::before {
+    content: '✅';
+    margin-right: 0.5rem;
+  }
+  
+  @media (max-width: 768px) {
+    .step {
+      flex-direction: column;
+      text-align: center;
+    }
+    
+    .step-number {
+      margin-right: 0;
+      margin-bottom: 1rem;
+    }
+    
+    .header h1 {
+      font-size: 2rem;
+    }
+    
+    .steps {
+      padding: 2rem 1rem;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🚀 Setup Your AI Bookkeeper</h1>
+      <p>Get your QuickBooks-powered AI assistant running in minutes</p>
+    </div>
+    
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h3>Connect QuickBooks</h3>
+          <p>Securely link your QuickBooks Online account to start syncing your financial data. We use bank-level encryption and never store your login credentials.</p>
+          <div class="feature-list">
+            <div class="feature-item">Real-time data sync</div>
+            <            <div class="feature-item">Bank-level security</div>
+            <div class="feature-item">Read-only access</div>
+            <div class="feature-item">Instant revocation</div>
+          </div>
+          <br>
+          <button class="btn" onclick="connectQuickBooks()">Connect QuickBooks</button>
+        </div>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h3>Business Information</h3>
+          <p>Tell us about your business so we can provide personalized insights and recommendations tailored to your industry.</p>
+          <div class="feature-list">
+            <div class="feature-item">Industry-specific insights</div>
+            <div class="feature-item">Custom reporting</div>
+            <div class="feature-item">Automated categorization</div>
+            <div class="feature-item">Tax preparation help</div>
+          </div>
+          <br>
+          <button class="btn btn-outline" disabled>Complete Step 1 First</button>
+        </div>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h3>AI Preferences</h3>
+          <p>Configure how often you want reports, what metrics matter most, and how you prefer to receive insights from your AI bookkeeper.</p>
+          <div class="feature-list">
+            <div class="feature-item">Custom report frequency</div>
+            <div class="feature-item">Metric priorities</div>
+            <div class="feature-item">Alert preferences</div>
+            <div class="feature-item">Communication style</div>
+          </div>
+          <br>
+          <button class="btn btn-outline" disabled>Complete Previous Steps</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <p>Questions? Email us at <a href="mailto:support@kleegr.com">support@kleegr.com</a></p>
+      <p><a href="/">← Back to Home</a></p>
+    </div>
+  </div>
+  
+  <script>
+    function connectQuickBooks() {
+      // In a real implementation, this would redirect to QuickBooks OAuth
+      alert('🔗 QuickBooks integration coming soon!\n\nThis would normally redirect you to QuickBooks to authorize the connection.');
+      
+      // Simulate successful connection for demo
+      setTimeout(() => {
+        document.querySelector('.step:nth-child(1) .btn').textContent = '✅ Connected';
+        document.querySelector('.step:nth-child(1) .btn').style.background = '#28a745';
+        
+        // Enable step 2
+        const step2Btn = document.querySelector('.step:nth-child(2) .btn');
+        step2Btn.textContent = 'Enter Business Info';
+        step2Btn.disabled = false;
+        step2Btn.classList.remove('btn-outline');
+        
+        step2Btn.onclick = () => {
+          alert('📋 Business setup form coming soon!');
+          step2Btn.textContent = '✅ Completed';
+          step2Btn.style.background = '#28a745';
+          
+          // Enable step 3
+          const step3Btn = document.querySelector('.step:nth-child(3) .btn');
+          step3Btn.textContent = 'Configure AI';
+          step3Btn.disabled = false;
+          step3Btn.classList.remove('btn-outline');
+          
+          step3Btn.onclick = () => {
+            alert('🤖 AI configuration panel coming soon!');
+            step3Btn.textContent = '✅ All Set!';
+            step3Btn.style.background = '#28a745';
+            
+            setTimeout(() => {
+              alert('🎉 Setup Complete!\n\nYour AI Bookkeeper is ready to help you manage your finances.');
+            }, 1000);
+          };
+        };
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
