@@ -126,11 +126,27 @@
     color: white;
   }
   
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+  
   .footer {
     text-align: center;
     padding: 2rem;
     background: #f8f9fa;
     color: #666;
+  }
+  
+  .footer a {
+    color: #667eea;
+    text-decoration: none;
+  }
+  
+  .footer a:hover {
+    text-decoration: underline;
   }
   
   .feature-list {
@@ -188,7 +204,7 @@
           <p>Securely link your QuickBooks Online account to start syncing your financial data. We use bank-level encryption and never store your login credentials.</p>
           <div class="feature-list">
             <div class="feature-item">Real-time data sync</div>
-            <            <div class="feature-item">Bank-level security</div>
+            <div class="feature-item">Bank-level security</div>
             <div class="feature-item">Read-only access</div>
             <div class="feature-item">Instant revocation</div>
           </div>
